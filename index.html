@@ -55,15 +55,18 @@
   </footer>
 
   <script>
-    // ====== النصوص المطلوبة ======
+  (function () {
+    // ====== نص الترحيب (المربع الأول) ======
     const GREET_BOX = [
       "مرحبًا",
       "أنا مساعدك بمنصة إحكام",
       "يسعدني تقديم الخدمات والإجابات على كافة أسئلتك"
     ].join("\n");
 
+    // ====== عنوان المربع الثاني ======
     const QUESTION_TITLE = "ما الخدمة التي تريد الاستفسار عنها";
 
+    // ====== الردود ======
     const REPLIES = {
       "1": يمكنك متابعة طلبك عن طريق منصة إحكام أو التواصل مع مركز الاتصال الموحد/920035544 أو إرسال بريد إلكتروني على البريد الرسمي info@ehkaam.sa,
       "2": مراجعة فرع الهيئة بالمنطقة المتواجد فيها برفقة المستندات المطلوبة ليتم رفع استدعاء من قبل موظف خدمة العملاء بفرع الهيئة عن طريق نظام معاملات.,
@@ -82,7 +85,7 @@
 https://spga.gov.sa/Enquiry-Service`
     };
 
-    // القوائم (أزرار رأسية 1..5)
+    // ====== قائمة الخدمات (أزرار رأسية) ======
     const MENU = [
       { key:"1", label:"1- استفسار عن طلب تملك" },
       { key:"2", label:"2- بشأن تسليم وثائق مطلوبة منك من منصة إحكام" },
@@ -92,27 +95,24 @@ https://spga.gov.sa/Enquiry-Service`
     ];
 
     // ====== عناصر DOM ======
-    const chat = document.getElementById("chat");
-    const form = document.getElementById("composer");
-    const input = document.getElementById("input");
+    let chat, form, input;
 
     // ====== أدوات صغيرة ======
-    function el(tag, attrs={}, ...children){
+    function el(tag, attrs = {}, ...children) {
       const e = document.createElement(tag);
-      for (const [k,v] of Object.entries(attrs)) {
+      for (const [k, v] of Object.entries(attrs)) {
         if (k === "class") e.className = v;
-        else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.substring(2), v);
+        else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
         else e.setAttribute(k, v);
       }
-      for (const c of children){
+      for (const c of children) {
         if (c == null) continue;
-        if (typeof c === "string") e.appendChild(document.createTextNode(c));
-        else e.appendChild(c);
+        e.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
       }
       return e;
     }
 
-    function addBubble(role, text){
+    function addBubble(role, text) {
       const row = el("div", { class: "msg " + (role === "user" ? "user" : "bot") });
       const bubble = el("div", { class: "bubble" }, text);
       row.appendChild(bubble);
@@ -121,17 +121,15 @@ https://spga.gov.sa/Enquiry-Service`
     }
 
     // ====== صناديق البداية ======
-    function showFirstBox(){
-      addBubble("bot", GREET_BOX);
-    }
+    function showFirstBox() { addBubble("bot", GREET_BOX); }
 
-    function showSecondBox(){
+    function showSecondBox() {
       const row = el("div", { class: "msg bot" });
       const bubble = el("div", { class: "bubble" });
       bubble.appendChild(el("div", {}, QUESTION_TITLE + " :"));
       const menu = el("div", { class: "menu" });
-      for (const item of MENU){
-        const btn = el("button", { onclick: ()=>handleChoice(item.key) }, item.label);
+      for (const item of MENU) {
+        const btn = el("button", { type:"button", onclick: () => handleChoice(item.key) }, item.label);
         menu.appendChild(btn);
       }
       bubble.appendChild(menu);
@@ -140,20 +138,20 @@ https://spga.gov.sa/Enquiry-Service`
       chat.scrollTop = chat.scrollHeight;
     }
 
-    function restartFlow(){
+    function restartFlow() {
       showFirstBox();
       showSecondBox();
     }
 
-    // ====== بعد الإجابة: اسأل هل يريد خدمة أخرى ======
-    function askAnother(){
+    // ====== بعد الرد: هل يريد خدمة أخرى؟ ======
+    function askAnother() {
       const row = el("div", { class: "msg bot" });
       const bubble = el("div", { class: "bubble" });
       bubble.appendChild(el("div", {}, "هل تريد خدمة أخرى؟"));
       const rowBtns = el("div", { class: "center", style:"margin-top:8px" });
-      const yes = el("button", { onclick: ()=>{ addBubble("user","نعم"); restartFlow(); } }, "نعم");
-      const yes2 = el("button", { onclick: ()=>{ addBubble("user","إي"); restartFlow(); } }, "إي");
-      const no  = el("button", { onclick: ()=>{ addBubble("user","لا"); addBubble("bot","سعدنا بخدمتكم"); } }, "لا");
+      const yes = el("button", { type:"button", onclick: ()=>{ addBubble("user","نعم"); restartFlow(); } }, "نعم");
+      const yes2 = el("button", { type:"button", onclick: ()=>{ addBubble("user","إي"); restartFlow(); } }, "إي");
+      const no  = el("button", { type:"button", onclick: ()=>{ addBubble("user","لا"); addBubble("bot","سعدنا بخدمتكم"); } }, "لا");
       rowBtns.appendChild(yes); rowBtns.appendChild(yes2); rowBtns.appendChild(no);
       bubble.appendChild(rowBtns);
       row.appendChild(bubble);
@@ -161,8 +159,8 @@ https://spga.gov.sa/Enquiry-Service`
       chat.scrollTop = chat.scrollHeight;
     }
 
-    // ====== التصرّف عند الاختيار ======
-    function handleChoice(key){
+    // ====== عند اختيار خدمة ======
+    function handleChoice(key) {
       const item = MENU.find(m => m.key === key);
       if (!item) return;
       addBubble("user", item.label);
@@ -170,37 +168,49 @@ https://spga.gov.sa/Enquiry-Service`
       askAnother();
     }
 
-    // ====== مدخلات النص الحر ======
-    function handleFreeText(txt){
+    // ====== كتابة نص حر ======
+    function handleFreeText(txt) {
       const t = txt.trim();
-      // أرقام 1..5
+      // أرقام 1..5 (عربي/إنجليزي)
       if (/^[١-٥1-5]$/.test(t)) {
         const map = { "1":"1","2":"2","3":"3","4":"4","5":"5","١":"1","٢":"2","٣":"3","٤":"4","٥":"5" };
-        handleChoice(map[t]);
-        return;
+        handleChoice(map[t]); return;
       }
-      // نعم / إي
+      // نعم/إي
       if (/^(نعم|اي|إي|ايوه|أيوه|yes)$/i.test(t)) { restartFlow(); return; }
       // لا
       if (/^(لا|no)$/i.test(t)) { addBubble("bot","سعدنا بخدمتكم"); return; }
 
-      // غير ذلك: اطلب منه اختيار خدمة
+      // غير ذلك
       addBubble("bot","يرجى اختيار رقم خدمة من (1–5) أو الضغط على أحد الأزرار بالأسفل.");
       showSecondBox();
     }
 
-    // ====== تشغيل أولي ======
-    form.addEventListener("submit", (e)=>{
-      e.preventDefault();
-      const txt = (input.value || "").trim();
-      if (!txt) return;
-      addBubble("user", txt);
-      input.value = "";
-      handleFreeText(txt);
-    });
+    // ====== تهيئة بعد تحميل الصفحة ======
+    function init() {
+      chat = document.getElementById("chat");
+      form = document.getElementById("composer");
+      input = document.getElementById("input");
 
-    // ابدأ بالمربع الأول ثم الثاني
-    restartFlow();
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const txt = (input.value || "").trim();
+        if (!txt) return;
+        addBubble("user", txt);
+        input.value = "";
+        handleFreeText(txt);
+      });
+
+      // ابدأ بالمربع الأول ثم الثاني
+      restartFlow();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
   </script>
 </body>
 </html>
