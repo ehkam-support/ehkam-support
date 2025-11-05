@@ -55,162 +55,150 @@
   </footer>
 
   <script>
-  (function () {
-    // ====== نص الترحيب (المربع الأول) ======
-    const GREET_BOX = [
-      "مرحبًا",
-      "أنا مساعدك بمنصة إحكام",
-      "يسعدني تقديم الخدمات والإجابات على كافة أسئلتك"
-    ].join("\n");
+/* تشغيل مضمون حتى لو الصفحة حملت قبل حقن السكربت */
+(function () {
+  // ====== نصوص الواجهة ======
+  const GREET_BOX = [
+    "مرحبًا",
+    "أنا مساعدك بمنصة إحكام",
+    "يسعدني تقديم الخدمات والإجابات على كافة أسئلتك"
+  ].join("\n");
+  const QUESTION_TITLE = "ما الخدمة التي تريد الاستفسار عنها";
 
-    // ====== عنوان المربع الثاني ======
-    const QUESTION_TITLE = "ما الخدمة التي تريد الاستفسار عنها";
-
-    // ====== الردود ======
-    const REPLIES = {
-      "1": يمكنك متابعة طلبك عن طريق منصة إحكام أو التواصل مع مركز الاتصال الموحد/920035544 أو إرسال بريد إلكتروني على البريد الرسمي info@ehkaam.sa,
-      "2": مراجعة فرع الهيئة بالمنطقة المتواجد فيها برفقة المستندات المطلوبة ليتم رفع استدعاء من قبل موظف خدمة العملاء بفرع الهيئة عن طريق نظام معاملات.,
-      "3": `يمكنك التوجه لأقرب فرع للهيئة العامة لعقارات الدولة بالمنطقة مع إحضار المستندات التالية:
+  const REPLIES = {
+    "1": يمكنك متابعة طلبك عن طريق منصة إحكام أو التواصل مع مركز الاتصال الموحد/920035544 أو إرسال بريد إلكتروني على البريد الرسمي info@ehkaam.sa,
+    "2": مراجعة فرع الهيئة بالمنطقة المتواجد فيها برفقة المستندات المطلوبة ليتم رفع استدعاء من قبل موظف خدمة العملاء بفرع الهيئة عن طريق نظام معاملات.,
+    "3": `يمكنك التوجه لأقرب فرع للهيئة العامة لعقارات الدولة بالمنطقة مع إحضار المستندات التالية:
 1- وكالة من جميع الورثة (مذكور بها مراجعة هيئة عقارات الدولة)
 2- صك حصر الورثة
 3- شهادة الوفاة
 4- البطاقة الشخصية
 5- كتاب معروض موجه لمدير الفرع لطلب النقل
 6- وجود حساب للموكل بمنصة إحكام`,
-      "4": `بشأن استرداد رسوم لمستفيدي الضمان الاجتماعي:
+    "4": `بشأن استرداد رسوم لمستفيدي الضمان الاجتماعي:
 1- البطاقة الشخصية
 2- مشهد من الضمان الاجتماعي
 3- التوجه لفرع الهيئة العامة لعقارات الدولة بفرع المنطقة.`,
-      "5": `يمكنك الاستعلام عن المعاملات من خلال الرابط التالي:
+    "5": `يمكنك الاستعلام عن المعاملات من خلال الرابط التالي:
 https://spga.gov.sa/Enquiry-Service`
-    };
+  };
 
-    // ====== قائمة الخدمات (أزرار رأسية) ======
-    const MENU = [
-      { key:"1", label:"1- استفسار عن طلب تملك" },
-      { key:"2", label:"2- بشأن تسليم وثائق مطلوبة منك من منصة إحكام" },
-      { key:"3", label:"3- بشأن نقل طلبات من مورث إلى أحد الورثة" },
-      { key:"4", label:"4- بشأن استرداد رسوم لمستفيدي الضمان الاجتماعي" },
-      { key:"5", label:"5- استعلام عن المعاملات" }
-    ];
+  const MENU = [
+    { key: "1", label: "1- استفسار عن طلب تملك" },
+    { key: "2", label: "2- بشأن تسليم وثائق مطلوبة منك من منصة إحكام" },
+    { key: "3", label: "3- بشأن نقل طلبات من مورث إلى أحد الورثة" },
+    { key: "4", label: "4- بشأن استرداد رسوم لمستفيدي الضمان الاجتماعي" },
+    { key: "5", label: "5- استعلام عن المعاملات" }
+  ];
 
-    // ====== عناصر DOM ======
-    let chat, form, input;
+  // عناصر DOM
+  let chat, form, input;
 
-    // ====== أدوات صغيرة ======
-    function el(tag, attrs = {}, ...children) {
-      const e = document.createElement(tag);
-      for (const [k, v] of Object.entries(attrs)) {
-        if (k === "class") e.className = v;
-        else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
-        else e.setAttribute(k, v);
-      }
-      for (const c of children) {
-        if (c == null) continue;
-        e.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
-      }
-      return e;
+  // أدوات صغيرة
+  function el(tag, attrs = {}, ...children) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") e.className = v;
+      else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
+    }
+    for (const c of children) e.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    return e;
+  }
+  function addBubble(role, text) {
+    const row = el("div", { class: "msg " + (role === "user" ? "user" : "bot") });
+    const bubble = el("div", { class: "bubble" }, text);
+    row.appendChild(bubble);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  // واجهة
+  function showFirstBox() { addBubble("bot", GREET_BOX); }
+  function showSecondBox() {
+    const row = el("div", { class: "msg bot" });
+    const bubble = el("div", { class: "bubble" });
+    bubble.appendChild(el("div", {}, QUESTION_TITLE + " :"));
+    const menu = el("div", { class: "menu" });
+    for (const item of MENU) {
+      const btn = el("button", { type: "button", onclick: () => handleChoice(item.key) }, item.label);
+      menu.appendChild(btn);
+    }
+    bubble.appendChild(menu);
+    row.appendChild(bubble);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+  }
+  function restartFlow() { showFirstBox(); showSecondBox(); }
+
+  function askAnother() {
+    const row = el("div", { class: "msg bot" });
+    const bubble = el("div", { class: "bubble" });
+    bubble.appendChild(el("div", {}, "هل تريد خدمة أخرى؟"));
+    const rowBtns = el("div", { class: "center", style: "margin-top:8px" });
+    const yes  = el("button", { type:"button", onclick: () => { addBubble("user","نعم"); restartFlow(); } }, "نعم");
+    const yes2 = el("button", { type:"button", onclick: () => { addBubble("user","إي"); restartFlow(); } }, "إي");
+    const no   = el("button", { type:"button", onclick: () => { addBubble("user","لا"); addBubble("bot","سعدنا بخدمتكم"); } }, "لا");
+    rowBtns.append(yes, yes2, no);
+    bubble.appendChild(rowBtns);
+    row.appendChild(bubble);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function handleChoice(key) {
+    const item = MENU.find(m => m.key === key);
+    if (!item) return;
+    addBubble("user", item.label);
+    addBubble("bot", REPLIES[key]);
+    askAnother();
+  }
+
+  function handleFreeText(txt) {
+    const t = txt.trim();
+    if (/^[١-٥1-5]$/.test(t)) {
+      const map = { "1":"1", "2":"2", "3":"3", "4":"4", "5":"5", "١":"1", "٢":"2", "٣":"3", "٤":"4", "٥":"5" };
+      handleChoice(map[t]); return;
+    }
+    if (/^(نعم|اي|إي|ايوه|أيوه|yes)$/i.test(t)) { restartFlow(); return; }
+    if (/^(لا|no)$/i.test(t)) { addBubble("bot", "سعدنا بخدمتكم"); return; }
+    addBubble("bot", "يرجى اختيار رقم خدمة من (1–5) أو الضغط على أحد الأزرار بالأسفل.");
+    showSecondBox();
+  }
+
+  function init() {
+    chat  = document.getElementById("chat");
+    form  = document.getElementById("composer");
+    input = document.getElementById("input");
+
+    // لو لأي سبب ما وجدنا العناصر، ننتظر فريم واحد ثم نعيد المحاولة
+    if (!chat || !form || !input) {
+      requestAnimationFrame(init);
+      return;
     }
 
-    function addBubble(role, text) {
-      const row = el("div", { class: "msg " + (role === "user" ? "user" : "bot") });
-      const bubble = el("div", { class: "bubble" }, text);
-      row.appendChild(bubble);
-      chat.appendChild(row);
-      chat.scrollTop = chat.scrollHeight;
-    }
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const txt = (input.value || "").trim();
+      if (!txt) return;
+      addBubble("user", txt);
+      input.value = "";
+      handleFreeText(txt);
+    });
 
-    // ====== صناديق البداية ======
-    function showFirstBox() { addBubble("bot", GREET_BOX); }
+    // تشغيل الواجهة
+    restartFlow();
+  }
 
-    function showSecondBox() {
-      const row = el("div", { class: "msg bot" });
-      const bubble = el("div", { class: "bubble" });
-      bubble.appendChild(el("div", {}, QUESTION_TITLE + " :"));
-      const menu = el("div", { class: "menu" });
-      for (const item of MENU) {
-        const btn = el("button", { type:"button", onclick: () => handleChoice(item.key) }, item.label);
-        menu.appendChild(btn);
-      }
-      bubble.appendChild(menu);
-      row.appendChild(bubble);
-      chat.appendChild(row);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function restartFlow() {
-      showFirstBox();
-      showSecondBox();
-    }
-
-    // ====== بعد الرد: هل يريد خدمة أخرى؟ ======
-    function askAnother() {
-      const row = el("div", { class: "msg bot" });
-      const bubble = el("div", { class: "bubble" });
-      bubble.appendChild(el("div", {}, "هل تريد خدمة أخرى؟"));
-      const rowBtns = el("div", { class: "center", style:"margin-top:8px" });
-      const yes = el("button", { type:"button", onclick: ()=>{ addBubble("user","نعم"); restartFlow(); } }, "نعم");
-      const yes2 = el("button", { type:"button", onclick: ()=>{ addBubble("user","إي"); restartFlow(); } }, "إي");
-      const no  = el("button", { type:"button", onclick: ()=>{ addBubble("user","لا"); addBubble("bot","سعدنا بخدمتكم"); } }, "لا");
-      rowBtns.appendChild(yes); rowBtns.appendChild(yes2); rowBtns.appendChild(no);
-      bubble.appendChild(rowBtns);
-      row.appendChild(bubble);
-      chat.appendChild(row);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    // ====== عند اختيار خدمة ======
-    function handleChoice(key) {
-      const item = MENU.find(m => m.key === key);
-      if (!item) return;
-      addBubble("user", item.label);
-      addBubble("bot", REPLIES[key]);
-      askAnother();
-    }
-
-    // ====== كتابة نص حر ======
-    function handleFreeText(txt) {
-      const t = txt.trim();
-      // أرقام 1..5 (عربي/إنجليزي)
-      if (/^[١-٥1-5]$/.test(t)) {
-        const map = { "1":"1","2":"2","3":"3","4":"4","5":"5","١":"1","٢":"2","٣":"3","٤":"4","٥":"5" };
-        handleChoice(map[t]); return;
-      }
-      // نعم/إي
-      if (/^(نعم|اي|إي|ايوه|أيوه|yes)$/i.test(t)) { restartFlow(); return; }
-      // لا
-      if (/^(لا|no)$/i.test(t)) { addBubble("bot","سعدنا بخدمتكم"); return; }
-
-      // غير ذلك
-      addBubble("bot","يرجى اختيار رقم خدمة من (1–5) أو الضغط على أحد الأزرار بالأسفل.");
-      showSecondBox();
-    }
-
-    // ====== تهيئة بعد تحميل الصفحة ======
-    function init() {
-      chat = document.getElementById("chat");
-      form = document.getElementById("composer");
-      input = document.getElementById("input");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const txt = (input.value || "").trim();
-        if (!txt) return;
-        addBubble("user", txt);
-        input.value = "";
-        handleFreeText(txt);
-      });
-
-      // ابدأ بالمربع الأول ثم الثاني
-      restartFlow();
-    }
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init);
-    } else {
-      init();
-    }
-  })();
-  </script>
+  // تأكيد التشغيل مهما كان ترتيب التحميل
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+    window.addEventListener("load", init); // احتياط
+  } else {
+    // لو الصفحة جاهزة
+    setTimeout(init, 0);
+  }
+})();
+</script>
 </body>
 </html>
