@@ -1,65 +1,42 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>مساعد إحكام — دعم فني</title>
   <style>
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Naskh Arabic", Tahoma, sans-serif;
-      background: #f6f7fb;
-      color: #111;
-      line-height: 1.6;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:#f6f7fb;color:#111;line-height:1.6;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Naskh Arabic",Tahoma,sans-serif
     }
-    header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; z-index: 5; }
-    .wrap { max-width: 920px; margin: 0 auto; padding: 12px; }
-    h1 { margin: 0; font-size: 18px; }
-
-    #chat { height: calc(100vh - 210px); overflow-y: auto; padding: 16px 6px 8px; }
-    .msg { display: flex; gap: 10px; margin: 10px 0; align-items: flex-start; }
-    .bubble {
-      padding: 10px 14px; border-radius: 14px; max-width: 85%;
-      background: #fff; border: 1px solid #eee;
-      word-wrap: break-word;
-    }
-    .user .bubble { background: #0077ff; color: #fff; border-color: #0077ff; margin-inline-start: auto; border-bottom-left-radius: 6px; }
-    .bot  .bubble { border-bottom-right-radius: 6px; }
-
-    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-    .menu button {
-      width: 100%; text-align: right; border: 1px solid #ddd; background: #fff;
-      padding: 12px 14px; border-radius: 10px; cursor: pointer; font: inherit;
-    }
-    .menu button:hover { border-color: #bbb; }
-
-    form { position: sticky; bottom: 0; background: #fff; border-top: 1px solid #eee; }
-    .row { display: flex; gap: 8px; align-items: stretch; }
-    textarea {
-      flex: 1; resize: none; min-height: 44px; max-height: 140px;
-      padding: 10px 12px; border: 1px solid #ddd; border-radius: 10px; font: inherit;
-    }
-    button.send { padding: 0 16px; border: 1px solid #0077ff; background: #0077ff; color: #fff; border-radius: 10px; cursor: pointer; font: inherit; }
-    .hint { font-size: 12px; color: #666; margin-top: 6px; }
-    footer { text-align: center; font-size: 12px; color: #888; padding: 8px 0 14px; }
-
-    .center { display: flex; gap: 8px; flex-wrap: wrap; }
-    .center button { flex: 1; min-width: 110px; }
-    a { color: #0077ff; }
+    header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee;z-index:5}
+    .wrap{max-width:920px;margin:0 auto;padding:12px}
+    h1{margin:0;font-size:18px}
+    #chat{height:calc(100vh - 210px);overflow-y:auto;padding:16px 6px 8px}
+    .msg{display:flex;gap:10px;margin:10px 0;align-items:flex-start}
+    .bubble{padding:10px 14px;border-radius:14px;max-width:85%;background:#fff;border:1px solid #eee;word-wrap:break-word}
+    .user .bubble{background:#0077ff;color:#fff;border-color:#0077ff;margin-inline-start:auto;border-bottom-left-radius:6px}
+    .bot  .bubble{border-bottom-right-radius:6px}
+    .menu{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .menu button{width:100%;text-align:right;border:1px solid #ddd;background:#fff;padding:12px 14px;border-radius:10px;cursor:pointer;font:inherit}
+    .menu button:hover{border-color:#bbb}
+    form{position:sticky;bottom:0;background:#fff;border-top:1px solid #eee}
+    .row{display:flex;gap:8px;align-items:stretch}
+    textarea{flex:1;resize:none;min-height:44px;max-height:140px;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font:inherit}
+    button.send{padding:0 16px;border:1px solid #0077ff;background:#0077ff;color:#fff;border-radius:10px;cursor:pointer;font:inherit}
+    .hint{font-size:12px;color:#666;margin-top:6px}
+    footer{text-align:center;font-size:12px;color:#888;padding:8px 0 14px}
+    .center{display:flex;gap:8px;flex-wrap:wrap}
+    .center button{flex:1;min-width:110px}
+    a{color:#0077ff}
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <h1>مساعد إحكام — دعم فني</h1>
-    </div>
-  </header>
+  <header><div class="wrap"><h1>مساعد إحكام — دعم فني</h1></div></header>
 
-  <div class="wrap">
-    <div id="chat" aria-live="polite" aria-label="منطقة المحادثة"></div>
-  </div>
+  <div class="wrap"><div id="chat" aria-live="polite" aria-label="منطقة المحادثة"></div></div>
 
   <form id="composer" autocomplete="off">
     <div class="wrap">
@@ -71,21 +48,18 @@
     </div>
   </form>
 
-  <footer>
-    <div class="wrap">صفحة واحدة — دعم فني ثابت لمنصة إحكام</div>
-  </footer>
+  <footer><div class="wrap">صفحة واحدة — دعم فني ثابت لمنصة إحكام</div></footer>
 
   <script>
   (function () {
     "use strict";
 
-    // ====== نصوص الواجهة ======
-    const GREET_BOX = [
-      "مرحبًا",
-      "أنا مساعدك بمنصة إحكام",
-      "يسعدني تقديم الخدمات والإجابات على كافة أسئلتك"
-    ].join("\n");
+    /* ===== مانع التكرار العالمي ===== */
+    if (window.__EHKAM_BOOTED) return;
+    window.__EHKAM_BOOTED = true;
 
+    /* ===== النصوص ===== */
+    const GREET_BOX = ["مرحبًا","أنا مساعدك بمنصة إحكام","يسعدني تقديم الخدمات والإجابات على كافة أسئلتك"].join("\n");
     const QUESTION_TITLE = "ما الخدمة التي تريد الاستفسار عنها";
 
     const REPLIES = {
@@ -104,10 +78,9 @@
       { key: "5", label: "5- استعلام عن المعاملات" }
     ];
 
-    // عناصر DOM
+    /* ===== أدوات ===== */
     let chat, form, input;
 
-    // أداة إنشاء عنصر
     function el(tag, attrs = {}, ...children) {
       const e = document.createElement(tag);
       for (const [k, v] of Object.entries(attrs)) {
@@ -118,18 +91,11 @@
       for (const c of children) e.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
       return e;
     }
-
-    // تحويل الروابط لنقرية + أسطر جديدة
     function toHTML(text) {
-      const escaped = text
-        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      const withLinks = escaped.replace(
-        /(https?:\/\/[^\s]+)/g,
-        '<a href="$1" target="_blank" rel="noopener">$1</a>'
-      );
-      return withLinks.replace(/\n/g, "<br>");
+      const escaped = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      const withLinks = escaped.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+      return withLinks.replace(/\n/g,"<br>");
     }
-
     function addBubble(role, text) {
       const row = el("div", { class: "msg " + (role === "user" ? "user" : "bot") });
       const bubble = el("div", { class: "bubble" });
@@ -139,92 +105,79 @@
       chat.scrollTop = chat.scrollHeight;
     }
 
-    // صناديق البداية
-    function showFirstBox() { addBubble("bot", GREET_BOX); }
-
-    function showSecondBox() {
-      const row = el("div", { class: "msg bot" });
-      const bubble = el("div", { class: "bubble" });
-      bubble.appendChild(el("div", {}, QUESTION_TITLE + " :"));
-      const menu = el("div", { class: "menu" });
-      for (const item of MENU) {
-        const btn = el("button", { type: "button", onclick: () => handleChoice(item.key) }, item.label);
-        menu.appendChild(btn);
+    function showFirstBox(){ addBubble("bot", GREET_BOX); }
+    function showSecondBox(){
+      const row = el("div",{class:"msg bot"});
+      const bubble = el("div",{class:"bubble"});
+      bubble.appendChild(el("div",{}, QUESTION_TITLE + " :"));
+      const menu = el("div",{class:"menu"});
+      for (const item of MENU){
+        menu.appendChild(el("button",{type:"button",onclick:()=>handleChoice(item.key)},item.label));
       }
       bubble.appendChild(menu);
       row.appendChild(bubble);
       chat.appendChild(row);
       chat.scrollTop = chat.scrollHeight;
     }
+    function restartFlow(){ showFirstBox(); showSecondBox(); }
 
-    function restartFlow() {
-      showFirstBox();
-      showSecondBox();
-    }
-
-    // بعد الرد: سؤال خدمة أخرى
-    function askAnother() {
-      const row = el("div", { class: "msg bot" });
-      const bubble = el("div", { class: "bubble" });
-      bubble.appendChild(el("div", {}, "هل تريد خدمة أخرى؟"));
-      const rowBtns = el("div", { class: "center", style: "margin-top:8px" });
-      const yes  = el("button", { type: "button", onclick: () => { addBubble("user","نعم"); restartFlow(); } }, "نعم");
-      const yes2 = el("button", { type: "button", onclick: () => { addBubble("user","إي"); restartFlow(); } }, "إي");
-      const no   = el("button", { type: "button", onclick: () => { addBubble("user","لا"); addBubble("bot","سعدنا بخدمتكم"); } }, "لا");
-      rowBtns.append(yes, yes2, no);
-      bubble.appendChild(rowBtns);
+    function askAnother(){
+      const row = el("div",{class:"msg bot"});
+      const bubble = el("div",{class:"bubble"});
+      bubble.appendChild(el("div",{},"هل تريد خدمة أخرى؟"));
+      const btns = el("div",{class:"center",style:"margin-top:8px"});
+      const yes = el("button",{type:"button",onclick:()=>{ addBubble("user","نعم"); restartFlow(); }},"نعم");
+      const no  = el("button",{type:"button",onclick:()=>{ addBubble("user","لا"); addBubble("bot","سعدنا بخدمتكم"); }},"لا");
+      btns.append(yes,no);
+      bubble.appendChild(btns);
       row.appendChild(bubble);
       chat.appendChild(row);
       chat.scrollTop = chat.scrollHeight;
     }
 
-    // اختيار خدمة
-    function handleChoice(key) {
-      const item = MENU.find(m => m.key === key);
-      if (!item) return;
+    function handleChoice(key){
+      const item = MENU.find(m=>m.key===key);
+      if(!item) return;
       addBubble("user", item.label);
       addBubble("bot", REPLIES[key]);
       askAnother();
     }
 
-    // إدخال حر
-    function handleFreeText(txt) {
+    function handleFreeText(txt){
       const t = txt.trim();
-      if (/^[١-٥1-5]$/.test(t)) {
-        const map = { "1":"1","2":"2","3":"3","4":"4","5":"5","١":"1","٢":"2","٣":"3","٤":"4","٥":"5" };
+      if(/^[١-٥1-5]$/.test(t)){
+        const map={"1":"1","2":"2","3":"3","4":"4","5":"5","١":"1","٢":"2","٣":"3","٤":"4","٥":"5"};
         handleChoice(map[t]); return;
       }
-      if (/^(نعم|اي|إي|ايوه|أيوه|yes)$/i.test(t)) { restartFlow(); return; }
-      if (/^(لا|no)$/i.test(t)) { addBubble("bot", "سعدنا بخدمتكم"); return; }
-      addBubble("bot", "يرجى اختيار رقم خدمة من (1–5) أو الضغط على أحد الأزرار بالأسفل.");
+      if(/^نعم$/i.test(t)){ restartFlow(); return; }
+      if(/^لا$/i.test(t)){ addBubble("bot","سعدنا بخدمتكم"); return; }
+      addBubble("bot","يرجى اختيار رقم خدمة من (1–5) أو الضغط على أحد الأزرار بالأسفل.");
       showSecondBox();
     }
 
-    // تهيئة مضمونة
-    function init() {
-      chat  = document.getElementById("chat");
-      form  = document.getElementById("composer");
+    function init(){
+      chat = document.getElementById("chat");
+      form = document.getElementById("composer");
       input = document.getElementById("input");
+      if(!chat||!form||!input) return;
 
-      if (!chat || !form || !input) { requestAnimationFrame(init); return; }
-
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit",(e)=>{
         e.preventDefault();
-        const txt = (input.value || "").trim();
-        if (!txt) return;
+        const txt = (input.value||"").trim();
+        if(!txt) return;
         addBubble("user", txt);
         input.value = "";
         handleFreeText(txt);
       });
 
-      restartFlow();
+      restartFlow(); // تظهر مرة واحدة فقط الآن
     }
 
+    // تشغيل مرّة واحدة فقط عند جاهزية DOM
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init);
-      window.addEventListener("load", init);
+      document.addEventListener("DOMContentLoaded", init, { once: true });
     } else {
-      setTimeout(init, 0);
+      init();
     }
   })();
   </script>
